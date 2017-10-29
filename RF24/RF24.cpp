@@ -113,13 +113,37 @@ void RF24::setCRCLength(rf24_crclength_e length)
     // Set the EN_CRC and CRC0 bits in the CONFIG register based on the length parameter.
     // length can either be RF24_CRC_DISABLED, RF24_CRC_8, or RF24_CRC_16.
     // TODO: END HERE
+
+    // en_crc is bit 3 in CONFIG
+    // crc0 is bit 2 in CONFIG
+
 	if (length == RF24_CRC_DISABLED || length == RF24_CRC_8 || length == RF24_CRC_16) {
-		uint8_t change_me1 = read_register(NRF_CONFIG, EN_CRC, length);
-		uint8_t change_me2 = read_register(NRF_CONFIG, CRCO, length);
-		NRF_CONFIG = NRF_CONFIG | (EN_CRC & 0b00001000);
-		NRF_CONFIG = NRF_CONFIG | (CRCO & 0b00000100);
-		write_register(NRF_CONFIG, change_me1, length;
-		write_register(NRF_CONFIG, change_me2, length);
+    uint8_t* bufVal;
+
+    read_register(NRF_CONFIG, bufVal, length);
+    uint8_t en_crc_val = 0;
+    uint8_t crc0_val = 0;
+
+    switch(length){
+      case RF24_CRC_DISABLED:
+        break;
+      case RF24_CRC_8:
+        en_crc_val = 1;
+        break;
+      case RF24_CRC_16:
+        en_crc_val = 1;
+        crc0_val = 1;
+        break;
+      default:
+        break;
+    }
+
+    en_crc_val <<= 3;
+    crc0_val <<= 2;
+
+    *bufVal = *bufVal | (en_crc_val & 0b1000) | (crc0_val & 0b100);
+
+		write_register(NRF_CONFIG, bufVal, 1);
 	}
 }
 
