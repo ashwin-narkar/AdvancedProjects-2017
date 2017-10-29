@@ -17,6 +17,7 @@ void setup() {
   radiomodule.openReadingPipe(1,0xc2c2c2c2c2);
   radiomodule.openWritingPipe(0xe7e7e7e7e7);
   radiomodule.setCRCLength(RF24_CRC_16);
+  Serial.being(9600);
 }
 
 void loop() {
