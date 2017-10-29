@@ -10,8 +10,6 @@
 #include "RF24_config.h"
 #include "RF24.h"
 
-/****************************************************************************/
-
 uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
 {
   uint8_t status = 0;
@@ -60,10 +58,24 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 }
 /****************************************************************************/
 
+
 void RF24::setAutoAck(bool enable)
 {
     // TODO: START HERE
     // This function either enables all of the AA bits or disables all of the AA bits in the Enable AutoAck register.
+    
+    uint8_t val = 0x00;
+    
+    if(enable){
+      val &= ~0x00;
+    }else{
+          // keep original val
+    }
+    
+    uint8_t* bufVal = &val;
+    write_register(EN_AA, bufVal, 1);
+    return;
+    
     // TODO: END HERE
 }
 
@@ -74,6 +86,22 @@ void RF24::setPALevel(uint8_t level)
   // TODO: START HERE
   // set the power level bits in the RF_SETUP register based on the level parameter.
   // level can be RF24_PA_MIN, RF24_PA_LOW, RF24_PA_HIGH, or RF24_PA_MAX.
+
+  // level needs to match one of these four to be switched
+  // power level bits for RF_SETUP register are bits 1 and 2 : 0 b 0000 0110
+
+  if(level == RF24_PA_MIN || level == RF24_PA_LOW || level == RF24_PA_HIGH || level == RF24_PA_MAX){
+    
+    uint8_t* bufVal;
+    read_register(RF_SETUP, bufVal, 1);
+
+    level <<= 1;
+    *bufVal = *bufVal | (level & 0b110);
+
+    write_register(RF_SETUP, bufVal, 1);
+  }
+
+  return;
   // TODO: END HERE
 }
 
@@ -85,6 +113,8 @@ void RF24::setCRCLength(rf24_crclength_e length)
     // Set the EN_CRC and CRC0 bits in the CONFIG register based on the length parameter.
     // length can either be RF24_CRC_DIABLED, RF24_CRC_8, or RF24_CRC_16.
     // TODO: END HERE
+
+    
 }
 
 /****************************************************************************/
@@ -92,6 +122,23 @@ void RF24::setRetries(uint8_t delay, uint8_t count)
 {
     // TODO: START HERE
     // Set the delay and count bits in the SETUP_RETR register.
+
+    // delay bits are 7:4 
+    // count bits are 3:0
+
+    uint8_t valDelay = delay & (0b1111);
+    valDelay <<= 4;
+
+    uint8_t val = count & (0b1111);
+    val = val | valDelay;
+
+    uint8_t* bufVal = &val;
+
+    write_register(SETUP_RETR, bufVal, 1);
+
+
+
+
     // TODO: END HERE
 }
 
@@ -1035,7 +1082,7 @@ uint8_t RF24::getDynamicPayloadSize(void)
   _SPI.transfer( R_RX_PL_WID );
   result = _SPI.transfer(0xff);
   endTransaction();
-  #endif
+  #endifwrite_register
 
   if(result > 32) { flush_rx(); delay(2); return 0; }
   return result;
