@@ -111,10 +111,16 @@ void RF24::setCRCLength(rf24_crclength_e length)
 {
     // TODO: START HERE
     // Set the EN_CRC and CRC0 bits in the CONFIG register based on the length parameter.
-    // length can either be RF24_CRC_DIABLED, RF24_CRC_8, or RF24_CRC_16.
+    // length can either be RF24_CRC_DISABLED, RF24_CRC_8, or RF24_CRC_16.
     // TODO: END HERE
-
-    
+	if (length == RF24_CRC_DISABLED || length == RF24_CRC_8 || length == RF24_CRC_16) {
+		uint8_t change_me1 = read_register(NRF_CONFIG, EN_CRC, length);
+		uint8_t change_me2 = read_register(NRF_CONFIG, CRCO, length);
+		NRF_CONFIG = NRF_CONFIG | (EN_CRC & 0b00001000);
+		NRF_CONFIG = NRF_CONFIG | (CRCO & 0b00000100);
+		write_register(NRF_CONFIG, change_me1, length;
+		write_register(NRF_CONFIG, change_me2, length);
+	}
 }
 
 /****************************************************************************/
