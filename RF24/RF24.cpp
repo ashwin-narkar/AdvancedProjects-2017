@@ -24,10 +24,10 @@ uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
   SPI.beginTransaction(SPISettings(10000000,MSBFIRST,SPI_MODE0));
   digitalWrite(csn_pin, LOW);
 
-  SPI.transfer(reg, len);
+  SPI.transfer(&reg, len);
 
-  buf* &= 0b00000000;
-  buf* |= reg;
+  *buf &= 0b00000000;
+  *buf |= reg;
 
   digitalWrite(csn_pin, HIGH);
   SPI.endTransaction();
@@ -40,6 +40,8 @@ uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
 uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 {
 	uint8_t status = 0;
+	uint8_t buffDuplicate = *buf;
+	uint8_t* bPt = &buffDuplicate;
 	// TODO: START HERE
 	// Implements the W_REGISTER command in the datasheet.
 	// Write len number of bytes from the array pointed to by buf, to the register reg.
@@ -49,9 +51,9 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 	// TODO: END HERE
 	SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
 	digitalWrite(csn_pin, LOW);
-	SPI.transfer(buf, len);
+	SPI.transfer(bPt, len);
 	reg = reg & 0;
-	reg = reg | *buf;
+	reg = reg | buffDuplicate;
 	digitalWrite(csn_pin, HIGH);
 	SPI.endTransaction();
 	return status;
@@ -1112,7 +1114,7 @@ uint8_t RF24::getDynamicPayloadSize(void)
   _SPI.transfer( R_RX_PL_WID );
   result = _SPI.transfer(0xff);
   endTransaction();
-  #endifwrite_register
+  #endif //write_register
 
   if(result > 32) { flush_rx(); delay(2); return 0; }
   return result;
