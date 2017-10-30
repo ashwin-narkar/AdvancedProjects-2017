@@ -42,6 +42,7 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 	uint8_t status = 0;
 	uint8_t buffDuplicate = *buf;
 	uint8_t* bPt = &buffDuplicate;
+	uint8* regAddress = reg;
 	// TODO: START HERE
 	// Implements the W_REGISTER command in the datasheet.
 	// Write len number of bytes from the array pointed to by buf, to the register reg.
@@ -52,10 +53,17 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 	SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
 	digitalWrite(csn_pin, LOW);
 	SPI.transfer(bPt, len);
-	reg = reg & 0;
-	reg = reg | buffDuplicate;
+	for (int i = 0; i < len; i++) {
+		*regAddress = *regAddress & 0;
+		*regAddress = *regAddress | *bPt;
+		regAddress++;
+		bPt++;
+	}
+	
 	digitalWrite(csn_pin, HIGH);
 	SPI.endTransaction();
+	uint8_t *statusRegister = NRF_STATUS;
+	status = *statusRegister;
 	return status;
 }
 /****************************************************************************/
