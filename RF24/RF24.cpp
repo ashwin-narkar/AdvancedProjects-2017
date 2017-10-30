@@ -23,7 +23,7 @@ uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
 
 
 
-  uint8 command = (reg & 0b00011111) | 0b000000000;
+  uint8_t command = (reg & 0b00011111) | 0b000000000;
 
   SPI.beginTransaction(SPISettings(10000000,MSBFIRST,SPI_MODE0));
   digitalWrite(csn_pin, LOW);
@@ -55,7 +55,7 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 	// TODO: END HERE
 	
 	
-	uint8 command = (reg & 0b00011111) | 0b00100000; 
+	uint8_t command = (reg & 0b00011111) | 0b00100000; 
 	SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
 	digitalWrite(csn_pin, LOW);
 	status = SPI.transfer(command);
