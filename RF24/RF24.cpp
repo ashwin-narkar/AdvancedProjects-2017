@@ -21,27 +21,25 @@ uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
   // The status variable should be set to the status byte returned by the command (explained in the datasheet).
   // TODO: END HERE
 
-  uint8_t* regvalue = reg;
+  uint8_t* regvalue = &reg;
+
+  uint8 command = (reg & 0b00011111) | 0b000000000;
 
   SPI.beginTransaction(SPISettings(10000000,MSBFIRST,SPI_MODE0));
   digitalWrite(csn_pin, LOW);
 
+  status = SPI.transfer(command);
+
   for (int i = 0; i < len; i++) {
-	  *buf = 0;
-	  *buf = *regvalue;
+	  *buf = SPI.transfer(*reg);
 	  buf++;
-	  regvalue++;
   }
-  SPI.transfer(*buf, len);
 
   digitalWrite(csn_pin, HIGH);
   SPI.endTransaction();
 
-  status = *buf[1]
-
   return status;
 }
-
 /****************************************************************************/
 
 uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
