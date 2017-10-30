@@ -40,6 +40,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+<<<<<<< HEAD
 //       delay(1000);
 //   Serial.println("Reading");
 // 
@@ -58,6 +59,35 @@ void loop() {
     Serial.println();
     Serial.println();
     
+=======
+<<<<<<< Updated upstream
+  radiomodule.startListening();
+  digitalWrite(green, HIGH);
+  delay(1000);
+  digitalWrite(green, LOW);
+  delay(1000);
+  if(radiomodule.available() && !received){
+    Serial.println("Reading");
+    radiomodule.read(r, sizeof(r));
+    received = true;
+  }
+  else {
+    Serial.println("Not available");
+  }
+  if (received == true) {
+    radiomodule.stopListening();
+  }
+  Serial.println(r[0]);
+=======
+
+//  radiomodule.startListening();
+//  if(radiomodule.available()){
+//    radiomodule.read(&receivedLetter, sizeof(receivedLetter));
+//  }
+//  radiomodule.stopListening();
+  Serial.println("hi");
+>>>>>>> Stashed changes
+>>>>>>> origin/master
 }
      
      
