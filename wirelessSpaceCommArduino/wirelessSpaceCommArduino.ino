@@ -24,7 +24,7 @@ void setup() {
   pinMode(CE, OUTPUT);
   pinMode(blue, OUTPUT);
   
-  Serial.begin(57600); 
+  Serial.begin(9600); 
   transmitter.begin();
   transmitter.setChannel(6);
   transmitter.setPALevel(RF24_PA_MIN);
