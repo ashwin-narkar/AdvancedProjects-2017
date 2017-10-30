@@ -74,10 +74,13 @@ void RF24::setAutoAck(bool enable)
     // TODO: START HERE
     // This function either enables all of the AA bits or disables all of the AA bits in the Enable AutoAck register.
     
-    uint8_t val = 0x00;
+    // 0:6
+
+
+    uint8_t val = 0b00000000;
     
     if(enable){
-      val &= ~0x00;
+      val |= 0b111111;
     }else{
           // keep original val
     }
@@ -102,7 +105,8 @@ void RF24::setPALevel(uint8_t level)
 
   if(level == RF24_PA_MIN || level == RF24_PA_LOW || level == RF24_PA_HIGH || level == RF24_PA_MAX){
     
-    uint8_t* bufVal;
+    uint8_t val = 0;
+    uint8_t* bufVal = &val;
     read_register(RF_SETUP, bufVal, 1);
 
     level <<= 1;
@@ -128,7 +132,9 @@ void RF24::setCRCLength(rf24_crclength_e length)
     // crc0 is bit 2 in CONFIG
 
 	if (length == RF24_CRC_DISABLED || length == RF24_CRC_8 || length == RF24_CRC_16) {
-    uint8_t* bufVal;
+    
+    uint8_t val = 0;
+    uint8_t* bufVal = &val;
 
     read_register(NRF_CONFIG, bufVal, length);
     uint8_t en_crc_val = 0;
@@ -175,10 +181,6 @@ void RF24::setRetries(uint8_t delay, uint8_t count)
     uint8_t* bufVal = &val;
 
     write_register(SETUP_RETR, bufVal, 1);
-
-
-
-
     // TODO: END HERE
 }
 
