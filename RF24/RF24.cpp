@@ -47,9 +47,6 @@ uint8_t RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
 uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 {
 	uint8_t status = 0;
-	uint8_t buffDuplicate = *buf;
-	uint8_t* bPt = &buffDuplicate;
-	uint8* regAddress = reg;
 	// TODO: START HERE
 	// Implements the W_REGISTER command in the datasheet.
 	// Write len number of bytes from the array pointed to by buf, to the register reg.
@@ -57,20 +54,20 @@ uint8_t RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 	// The global variable csn_pin can be used to access the SS pin.
 	// The status variable should be set to the status byte returned by the command (explained in the datasheet).
 	// TODO: END HERE
+	
+	uint8_t buffDuplicate = *buf;
+	uint8_t* bPt = &buffDuplicate;
+	uint8 command = (reg & 0b00011111) | 0b00100000; 
 	SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
 	digitalWrite(csn_pin, LOW);
-	SPI.transfer(bPt, len);
+	status = SPI.transfer(command);
 	for (int i = 0; i < len; i++) {
-		*regAddress = *regAddress & 0;
-		*regAddress = *regAddress | *bPt;
-		regAddress++;
+		SPI.transfer(*bPt);
 		bPt++;
-	}
-	
+
+	}	
 	digitalWrite(csn_pin, HIGH);
 	SPI.endTransaction();
-	uint8_t *statusRegister = NRF_STATUS;
-	status = *statusRegister;
 	return status;
 }
 /****************************************************************************/
