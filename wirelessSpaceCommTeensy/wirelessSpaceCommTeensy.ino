@@ -37,6 +37,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+<<<<<<< Updated upstream
   radiomodule.startListening();
   digitalWrite(green, HIGH);
   delay(1000);
@@ -54,4 +55,13 @@ void loop() {
     radiomodule.stopListening();
   }
   Serial.println(r[0]);
+=======
+
+//  radiomodule.startListening();
+//  if(radiomodule.available()){
+//    radiomodule.read(&receivedLetter, sizeof(receivedLetter));
+//  }
+//  radiomodule.stopListening();
+  Serial.println("hi");
+>>>>>>> Stashed changes
 }
