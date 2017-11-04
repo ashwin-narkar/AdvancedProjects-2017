@@ -5,27 +5,40 @@
 #include <SPI.h>
 
 
+
 #define CE 9
 #define CS 10
+#define green 18
+#define blue 19
+#define yellow 17
 
 unsigned char r = 'a';
+unsigned char x[] = {'Y','G','B'};
+bool roundOver = false;
+
 
 RF24 radiomodule(CE,CS);
-bool received = false;
+
+String seq = "";
+String playerInput = "";
+int inputtedLen = 0;
+int seqLength = 0;
+int it = 1;
 
 
 
 void setup() {
   // put your setup code here, to run once:
- 
+  pinMode(green,OUTPUT);
+  pinMode(blue,OUTPUT);
+  pinMode(yellow,OUTPUT);
   Serial.begin(9600);
   
   radiomodule.begin();
   radiomodule.setChannel(6);
   radiomodule.setPALevel(RF24_PA_MIN);
   radiomodule.setDataRate(RF24_1MBPS);
-//  uint8_t writeAddress[] = {0xe7e7e7e7e7};
-//  uint8_t readAddress[] = {0xC2C2C2C2C2};
+
   radiomodule.setAutoAck(1, true);
   radiomodule.setAutoAck(0, true);
   radiomodule.setPayloadSize(sizeof(unsigned char));
@@ -34,13 +47,35 @@ void setup() {
   radiomodule.setCRCLength(RF24_CRC_16);
   radiomodule.startListening();
   
+  randomSeed(analogRead(5));
+    delay(5000);
+  
+  generateSeq();
+  //Serial.println(seq);
+ 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+ 
+//  Serial.print("Sequence: ");
+//  Serial.println(seq);
+//  Serial.print("Iteration ");
+//  Serial.println(it);
+//  it++;
+  delay(1000);
+   
+  flashSeq(); 
+  for (int i =0;i<seqLength;i++) {
+    sendSeq(); 
+    bool ack = listenForArduino();
+    displayAck(ack);
+  }
+  digitalWrite(green,HIGH);
+  delay(400);
+  digitalWrite(green,LOW);
+  generateSeq();
 }
-     
      
 
 
