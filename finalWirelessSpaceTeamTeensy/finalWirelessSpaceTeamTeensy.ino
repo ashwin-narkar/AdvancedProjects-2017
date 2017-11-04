@@ -7,13 +7,13 @@
 
 #define CE 9
 #define CS 10
-#define green 20
+
 unsigned char r = 'a';
 
 RF24 radiomodule(CE,CS);
 bool received = false;
 
-//byte addresses[][6] = {"1Node","2Node"};
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -39,24 +39,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-//       delay(1000);
-//   Serial.println("Reading");
-// 
-//    Serial.println((int) r[0]);
-    
-//  digitalWrite(green, HIGH);
-//  delay(1000);
-//  digitalWrite(green, LOW);
-    delay(100);
-    Serial.print("Availability: ");
-    Serial.println(radiomodule.available());
-    if (radiomodule.available()) {
-      
-      radiomodule.read(&r, sizeof(unsigned char)); 
-    }
-    Serial.print("Received: ");
-    Serial.println(r);
-    //radiomodule.printDetails();
 }
      
      
