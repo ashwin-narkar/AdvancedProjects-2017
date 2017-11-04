@@ -1,4 +1,3 @@
-
 #include <nRF24L01.h>
 #include <printf.h>
 #include <RF24.h>
@@ -11,45 +10,43 @@
 #define CE 9
 #define blue 3
 
-RF24 transmitter(CE, CSN);
-bool transmitting;
-char c[1];
+RF24 radio(CE, CSN);
+unsigned char c;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(CSN, OUTPUT);
-  pinMode(MOSI, OUTPUT);
-  pinMode(MISO, INPUT);
-  pinMode(SCK, OUTPUT);
-  pinMode(CE, OUTPUT);
-  pinMode(blue, OUTPUT);
-  
+
+  printf_begin();
   Serial.begin(9600); 
-  transmitter.begin();
-  transmitter.setChannel(6);
-  transmitter.setPALevel(RF24_PA_MIN);
-  uint8_t writeAddress[] = {0xC2,0xC2,0xC2,0xC2,0xC2};
-  uint8_t readAddress[] = {0xe7,0xe7,0xe7,0xe7,0xe7};
-  transmitter.openWritingPipe(writeAddress);
-  //transmitter.openReadingPipe(1,readAddress);
-  transmitting = true;
-  c[0] = 'a';
+  radio.begin();
+  radio.setPALevel(RF24_PA_MIN);
+  radio.setPayloadSize(sizeof(unsigned char));
+  radio.setChannel(6);
+  radio.setCRCLength(RF24_CRC_16);
+  radio.setDataRate(RF24_1MBPS);
+  radio.setAutoAck(1, true);
+  radio.setAutoAck(0, true);
+  radio.startListening();
+
+  radio.openReadingPipe(1, 0x6161616161);
+  radio.openWritingPipe(0xe8e8e8e8e8);
+ 
+  c = 'z';
   
   
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(blue, HIGH);
-  delay(1000);
-  digitalWrite(blue, LOW);
-  delay(1000);
-  Serial.println("Working");
-//  if (transmitting) {
-//    transmitter.write(c,1);
-//    Serial.println("sent");
-//  }
+
+  radio.stopListening();
+  
+  radio.write(&c,sizeof(unsigned char));
+  //Serial.println("sent");
+  c++;
+  c = c%128;
   //Serial.println('a');
-  //transmitting = false;
-  //while (true);
+  Serial.println(c);
+  delay(100);
+  
 }
