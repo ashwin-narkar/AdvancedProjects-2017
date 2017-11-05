@@ -4,14 +4,25 @@
 #include <RF24_config.h>
 
 #define CSN 10
-#define MOSI 11
-#define MISO 12
-#define SCK 13
 #define CE 9
-#define blue 3
+#define readingPipe 1
+#define writingPipe 0
+
+#define yellowButton 4
+#define blueButton 5
+#define greenButton 6
 
 RF24 radio(CE, CSN);
-unsigned char c;
+unsigned char buttonPushed = 'z';
+bool risingEdgeYellow = false;
+bool risingEdgeBlue = false;
+bool risingEdgeGreen = false;
+bool previousReadingYellow = true;
+bool previousReadingBlue = true;
+bool previousReadingGreen = true;
+
+bool roundOver = false;
+int i = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,29 +35,55 @@ void setup() {
   radio.setChannel(6);
   radio.setCRCLength(RF24_CRC_16);
   radio.setDataRate(RF24_1MBPS);
-  radio.setAutoAck(1, true);
-  radio.setAutoAck(0, true);
+  radio.setAutoAck(readingPipe, true);
+  radio.setAutoAck(writingPipe, true);
   radio.startListening();
 
   radio.openReadingPipe(1, 0x6161616161);
   radio.openWritingPipe(0xe8e8e8e8e8);
- 
-  c = 'z';
-  
+
+  pinMode(greenButton,INPUT);
+  pinMode(blueButton,INPUT);
+  pinMode(yellowButton,INPUT);
   
 }
 
+unsigned char c = 'z';
+
 void loop() {
   // put your main code here, to run repeatedly:
+  roundOver = false;
+  
+    radio.startListening();
+    Serial.println("Not Picked Up");
+    while(!radio.available());
+    Serial.println("Listening for Package");
+    radio.read(&c,sizeof(c));
+   
+  while (!roundOver) { 
+    buttonPushed = 'z';
+    Serial.println("Listening for Button");
+    
+    listenForPress();
 
-  radio.stopListening();
-  
-  radio.write(&c,sizeof(unsigned char));
-  //Serial.println("sent");
-  c++;
-  c = c%128;
-  //Serial.println('a');
-  Serial.println(c);
-  delay(100);
-  
+    if(buttonPushed != 'z'){
+      
+      if(checkSeq(buttonPushed,c)){
+       radio.stopListening();
+       unsigned char i = '1';
+       while(!radio.write(&i,sizeof(unsigned char)));
+       radio.startListening();
+       Serial.println("Right");
+      }
+      else{
+       radio.stopListening();
+       unsigned char i = '0';
+       radio.write(&i,sizeof(unsigned char));
+       radio.startListening();
+       Serial.println("Wrong");
+      }
+      roundOver = true;
+    }
+  }
+  delay(200);
 }
