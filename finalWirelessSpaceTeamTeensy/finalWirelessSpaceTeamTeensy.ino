@@ -15,7 +15,7 @@
 unsigned char r = 'a';
 unsigned char x[] = {'Y','G','B'};
 bool roundOver = false;
-
+int i =0;
 
 RF24 radiomodule(CE,CS);
 
@@ -51,6 +51,10 @@ void setup() {
     delay(5000);
   
   generateSeq();
+  Serial.println("About to Flash Sequence");
+    flashSeq(); 
+    Serial.print("Flashed Sequence: ");
+    Serial.println(seq);
   //Serial.println(seq);
  
 }
@@ -64,17 +68,27 @@ void loop() {
 //  Serial.println(it);
 //  it++;
   delay(1000);
-   
-  flashSeq(); 
-  for (int i =0;i<seqLength;i++) {
-    sendSeq(); 
-    bool ack = listenForArduino();
+  
+    sendSeq(i); 
+    unsigned char ack = listenForArduino();
+    while (ack == '9') {
+      ack = listenForArduino();
+    }
     displayAck(ack);
-  }
+  
   digitalWrite(green,HIGH);
   delay(400);
   digitalWrite(green,LOW);
-  generateSeq();
+  Serial.println("Correct!");
+  i++;
+  if (i == seqLength) {
+    generateSeq();
+    Serial.println("About to Flash Sequence");
+    flashSeq(); 
+    Serial.print("Flashed Sequence: ");
+    Serial.println(seq);  
+    i=0;
+  }
 }
      
 

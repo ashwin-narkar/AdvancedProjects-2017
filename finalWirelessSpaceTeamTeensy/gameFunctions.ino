@@ -3,7 +3,9 @@ unsigned char listenForArduino(){
   unsigned char c = '9';
   while(!radiomodule.available());
   if (radiomodule.available()){
-    radiomodule.read(&c,sizeof(unsigned char));    
+    radiomodule.read(&c,sizeof(unsigned char));  
+    Serial.print("Acknowledgement: ");
+    Serial.println((char)c);  
   }
   return c;
 }
@@ -12,8 +14,9 @@ void sendSeq(int index){
   radiomodule.stopListening();
   unsigned char x = seq[index];
   while (!radiomodule.write(&x,sizeof(unsigned char))){
-    Serial.println("Package Not sent yet ");
-    delay(400);
+    Serial.print("Package Not sent yet: ");
+    Serial.println((char)x);
+    delay(100);
   }
   Serial.println("Package Sent ");
 }
@@ -21,6 +24,7 @@ void sendSeq(int index){
 void displayAck(unsigned char corr){
   if (corr == '0') {
     digitalWrite(blue,HIGH);
+    Serial.println("GAME OVER");
     while(true);
   }
 }
