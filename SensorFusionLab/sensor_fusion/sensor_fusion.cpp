@@ -5,6 +5,16 @@
 void readReg(uint8_t reg, uint8_t *buf, size_t len)
 {
     // TODO: Implement
+	Wire.beginTransmission();
+	uint8_t *address = (reg << 1) & 0b11111110;
+	Wire.write(address);
+	Wire.endTransmission();
+	Wire.requestFrom(1, len);
+	while (len) {
+		*buf = Wire.read();
+		len--;
+	}
+
 }
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
