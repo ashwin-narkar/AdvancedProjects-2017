@@ -19,7 +19,20 @@ void readReg(uint8_t reg, uint8_t *buf, size_t len)
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
 {
-    // TODO: Implement
+   	ire.beginTransmission(0b1101001);	//pin at AD0 is high
+	uint8_t *address = (reg << 1) | 0b00000001;
+	Wire.write(address);
+	Wire.endTransmission();
+
+	while (len) {
+		Wire.beginTransmission(0b1101001);
+		Wire.write(*buf);
+		len--;
+		Wire.endTransmission();
+	}	//not sure if right but I try
+
+	
+	// TODO: Implement
 }
 
 float vector_normalize(struct vector *raw, struct vector *unit)
