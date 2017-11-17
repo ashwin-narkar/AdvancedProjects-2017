@@ -2,34 +2,50 @@
 #include <Wire.h>
 #include "sensor_fusion.h"
 
+
+const int MPU_addr=0x68;  // I2C address of the MPU-6050
+
+
 void readReg(uint8_t reg, uint8_t *buf, size_t len)
 {
     // TODO: Implement
-	Wire.beginTransmission();
-	uint8_t *address = (reg << 1) & 0b11111110;
+
+	Wire.beginTransmission(MPU_addr);
+
+	uint8_t address = (reg << 1) | 0b00000001;
 	Wire.write(address);
-	Wire.endTransmission();
-	Wire.requestFrom(1, len);
-	while (len) {
+
+	Wire.endTransmission(false);
+	
+	Wire.requestFrom(MPU_addr, len, true);
+
+	while (Wire.available()) {
 		*buf = Wire.read();
-		len--;
+		buf++;
 	}
+
+	
+	
 
 }
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
 {
-   	ire.beginTransmission(0b1101001);	//pin at AD0 is high
-	uint8_t *address = (reg << 1) | 0b00000001;
+	
+   	Wire.beginTransmission(MPU_addr);	//pin at AD0 is high
+	uint8_t address = (reg << 1) & 0b11111110;
+
 	Wire.write(address);
-	Wire.endTransmission();
+
 
 	while (len) {
-		Wire.beginTransmission(0b1101001);
 		Wire.write(*buf);
 		len--;
-		Wire.endTransmission();
+		buf++;
+		
 	}	//not sure if right but I try
+	Wire.endTransmission(true);
+
 
 	
 	// TODO: Implement
