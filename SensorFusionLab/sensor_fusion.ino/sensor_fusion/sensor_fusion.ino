@@ -4,14 +4,10 @@
 
 int xAccelBias,yAccelBias,zAccelBias,xGyroBias,yGyroBias,zGyroBias;
 
-struct vect {
-  int x;
-  int y;
-  int z;
-};
 
-struct vect accel;
-struct vect gyro;
+
+struct vector accel;
+struct vector gyro;
 
 void setup() {
   setupRegisters();  
@@ -30,7 +26,7 @@ void updateGyroVector() {
   gyro.z = getGyroZ()-zGyroBias;
 }
 
-void printVector(struct vect v) {
+void printVector(struct vector v) {
   
   Serial.print(v.x);
   Serial.print(" ");
@@ -44,6 +40,7 @@ void loop() {
   if (getStatusReg()){
     //Serial.print("Accelerometer: ");
     updateAccelVector();
+    vector_normalize(&accel,&accel);
     printVector(accel);
     //Serial.println();
     //Serial.println();
