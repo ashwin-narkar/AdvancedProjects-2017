@@ -9,56 +9,30 @@ const uint8_t MPU_addr=0x68;  // I2C address of the MPU-6050
 void readReg(uint8_t reg, uint8_t *buf, size_t len)
 {
     // TODO: Implement
-	digitalWrite(A5,HIGH);
-	digitalWrite(A4,HIGH);
-	digitalWrite(A4,LOW);
-	uint8_t addy = (MPU_addr << 1) & 0b11111110
-	Wire.beginTransmission(addy);
+    uint8_t *d = buf;
+	Wire.beginTransmission(MPU_addr);
 	Wire.write(reg);
-
-	Wire.endTransmission(false);
-	digitalWrite(A5,HIGH);
-	digitalWrite(A4,HIGH);
-	digitalWrite(A4,LOW);
-	addy = (MPU_addr << 1) |0b00000001
-	Wire.write(addy);
 
 	Wire.requestFrom(MPU_addr, len);
 
-	while (len) {
-		*buf = Wire.read();
-		buf++;
-		len--;
+	for (int i = 0; i<len;i++) {
+		buf[i] = Wire.read();
 	}
-	digitalWrite(A5,HIGH);
-	digitalWrite(A4,LOW);
-	digitalWrite(A4,HIGH);
-	
-	
-
+	Serial.println(*d);
+	Wire.endTransmission(true);
 }
 
 void writeReg(uint8_t reg, uint8_t *buf, size_t len)
-{
+{	
+	Wire.beginTransmission(MPU_addr);
+	Wire.write(reg);
 	
-   	Wire.beginTransmission(MPU_addr);	//pin at AD0 is high
-	uint8_t address = (reg << 1) & 0b11111110;
-
-	Wire.write(address);
-
-
-	while (len) {
-		Wire.write(*buf);
-		len--;
-		buf++;
+	for (int i=0;i<len;i++) {
+		Wire.write(buf[i]);
 		
-	}	//not sure if right but I try
+	}
 
 	Wire.endTransmission(true);
-
-
-	
-	// TODO: Implement
 }
 
 float vector_normalize(struct vector *raw, struct vector *unit)
