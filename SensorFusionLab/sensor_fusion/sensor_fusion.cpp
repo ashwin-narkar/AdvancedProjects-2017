@@ -3,7 +3,7 @@
 #include "sensor_fusion.h"
 
 
-const int MPU_addr=0x68;  // I2C address of the MPU-6050
+const uint8_t MPU_addr=0x68;  // I2C address of the MPU-6050
 
 
 void readReg(uint8_t reg, uint8_t *buf, size_t len)
@@ -17,11 +17,12 @@ void readReg(uint8_t reg, uint8_t *buf, size_t len)
 
 	Wire.endTransmission(false);
 	
-	Wire.requestFrom(MPU_addr, len, true);
+	Wire.requestFrom(MPU_addr, len);
 
-	while (Wire.available()) {
+	while (len) {
 		*buf = Wire.read();
 		buf++;
+		len--;
 	}
 
 	
@@ -44,6 +45,7 @@ void writeReg(uint8_t reg, uint8_t *buf, size_t len)
 		buf++;
 		
 	}	//not sure if right but I try
+
 	Wire.endTransmission(true);
 
 

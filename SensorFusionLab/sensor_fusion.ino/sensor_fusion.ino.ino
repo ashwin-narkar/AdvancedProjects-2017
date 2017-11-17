@@ -14,11 +14,11 @@
 // CONFIG register to largest possible bandwidth
 // pg. 13 of datasheet: Register 0x1A set DLPF_CFG Bits[2:0] to 0 (000b)
 
-const int PWR_MGMT_1=107;
-const int GYRO_CONFIG=27;
-const int CONFIG=26;
+const int PWR_MGMT_1 = 0x6B;
+const int GYRO_CONFIG = 0x1B;
+const int CONFIG = 0x1A;
 
-const int MPU_addr=0x68;  // I2C address of the MPU-6050
+const int MPU_addr = 0x68;  // I2C address of the MPU-6050
 
 void setup() {
 
