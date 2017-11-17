@@ -3,7 +3,7 @@ void setupRegisters() {
 
   uint8_t data = 0;
   uint8_t *buffr = &data;
-  Serial.begin(9600);
+  Serial.begin(115200);
   
 
  Serial.print("PWR_MGMT_1 before: ");
