@@ -12,13 +12,13 @@ void readReg(uint8_t reg, uint8_t *buf, size_t len)
     uint8_t *d = buf;
 	Wire.beginTransmission(MPU_addr);
 	Wire.write(reg);
-
+	Wire.endTransmission(false);
 	Wire.requestFrom(MPU_addr, len);
 
 	for (int i = 0; i<len;i++) {
 		buf[i] = Wire.read();
 	}
-	Serial.println(*d);
+	
 	Wire.endTransmission(true);
 }
 
