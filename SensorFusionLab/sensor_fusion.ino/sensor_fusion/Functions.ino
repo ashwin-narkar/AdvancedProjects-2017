@@ -6,7 +6,7 @@ void setupRegisters() {
   Serial.begin(115200);
   
 
- Serial.print("PWR_MGMT_1 before: ");
+  Serial.print("PWR_MGMT_1 before: ");
   readReg(PWR_MGMT_1, &data, 1);
   Serial.println(data,BIN);
   // PWR_MGMT_1 set bits [6] to 0
@@ -166,4 +166,74 @@ int getGyroZ(){
    readReg(GYRO_ZOUT_L,&data,1);
    zGyro += data;
    return zGyro;
+}
+
+void quaternionator(struct vector* v){
+  magnitude = vector_normalize(&gyro, &gyro);      //finding angular velocity of gyroscope vector
+  currentAngle = -(magnitude / 16.4) * (3.14/180);  //finding velocity from angular velocity
+  deltaTime = millis() - deltaTime;
+  currentAngle *= (deltaTime/1000.0);
+ 
+  /*if(!first_time_run){
+    pastAngle = currentAngle;
+    first_time_run = true;
+  }
+  else{
+    deltaAngle = (currentAngle - pastAngle) * deltaTime * 1000;
+    pastAngle = currentAngle + deltaAngle;
+  }*/
+  struct quaternion updateQuater;
+  quaternion_create(&gyro, currentAngle, &updateQuater);
+  
+//  Serial.print("DeltaTime: ");
+//  Serial.println(deltaTime);
+
+  quaternion_rotate(v, &updateQuater, v);
+}
+
+void filterAndCombine() {
+  
+  filteredVect.x = (accel.x*accelWeight) + (filteredVect.x*(1-accelWeight));
+  filteredVect.y = (accel.y*accelWeight) + (filteredVect.y*(1-accelWeight));
+  filteredVect.z = (accel.z*accelWeight) + (filteredVect.z*(1-accelWeight));
+  
+}
+
+
+
+
+void angleCalculations(){
+  //gyro
+  angle_x += gyro.x * 0.0000611;
+  angle_y += gyro.y * 0.0000611;
+  angle_x += angle_y * sin(gyro.z * 0.000001066);
+  angle_y += angle_x * sin(gyro.z * 0.000001066);
+
+  //accelerometer
+  total_accel_vector = sqrt((accel.x*accel.x) + (accel.y*accel.y) + (accel.z*accel.z));
+  angle_x_acc = asin((float)accel.y/total_accel_vector) * 57.296;
+  angle_y_acc = asin((float)accel.x/total_accel_vector) * -57.296;
+
+  //Serial.println(total_accel_vector);
+
+  //pitch and roll accelerometer calibrations
+  angle_x_acc -= 0.0;
+  angle_y_acc -= 0.0;
+
+ if(first_time_run){
+    angle_x = angle_x * 0.9996 + angle_x_acc * 0.0004;    
+    angle_y = angle_y * 0.9996 + angle_y_acc * 0.0004; 
+ }
+ else{
+  angle_x = angle_x_acc;
+  angle_y = angle_y_acc;
+  first_time_run = true;
+ }
+
+ //To dampen the pitch and roll angles a complementary filter is used
+ angle_x_output = angle_x_output * 0.9 + angle_x * 0.1;
+ angle_y_output = angle_y_output * 0.9 + angle_y * 0.1;
+
+ while(micros() - loop_timer < 4000);                                 //Wait until the loop_timer reaches 4000us (250Hz) before starting the next loop
+ loop_timer = micros(); //Reset the loop timer
 }
