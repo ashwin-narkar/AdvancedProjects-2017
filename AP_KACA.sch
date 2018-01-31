@@ -1875,6 +1875,24 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="60.96" y1="129.54" x2="66.04" y2="129.54" width="0.1524" layer="91"/>
 <label x="66.04" y="129.54" size="1.778" layer="95" xref="yes"/>
 </segment>
+<segment>
+<pinref part="C4" gate="C" pin="2"/>
+<wire x1="12.7" y1="86.36" x2="22.86" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="U1" gate="U$1" pin="AVCC"/>
+<wire x1="22.86" y1="86.36" x2="22.86" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="76.2" x2="30.48" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="86.36" x2="22.86" y2="91.44" width="0.1524" layer="91"/>
+<junction x="22.86" y="86.36"/>
+<label x="22.86" y="91.44" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+<segment>
+<pinref part="VOLTAGEREG" gate="G$1" pin="OUT"/>
+<pinref part="C13" gate="C" pin="2"/>
+<wire x1="175.26" y1="116.84" x2="182.88" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="182.88" y1="116.84" x2="182.88" y2="121.92" width="0.1524" layer="91"/>
+<junction x="182.88" y="116.84"/>
+<label x="182.88" y="121.92" size="1.778" layer="95" xref="yes"/>
+</segment>
 </net>
 <net name="DGND" class="0">
 <segment>
@@ -2204,15 +2222,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <label x="86.36" y="50.8" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="N$12" class="0">
-<segment>
-<pinref part="C4" gate="C" pin="2"/>
-<wire x1="12.7" y1="86.36" x2="22.86" y2="86.36" width="0.1524" layer="91"/>
-<pinref part="U1" gate="U$1" pin="AVCC"/>
-<wire x1="22.86" y1="86.36" x2="22.86" y2="76.2" width="0.1524" layer="91"/>
-<wire x1="22.86" y1="76.2" x2="30.48" y2="76.2" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="U1" gate="U$1" pin="AREF"/>
@@ -2534,13 +2543,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="223.52" y1="106.68" x2="223.52" y2="101.6" width="0.1524" layer="91"/>
 <junction x="223.52" y="106.68"/>
 <label x="223.52" y="101.6" size="1.778" layer="95" rot="R270" xref="yes"/>
-</segment>
-</net>
-<net name="N$14" class="0">
-<segment>
-<pinref part="VOLTAGEREG" gate="G$1" pin="OUT"/>
-<pinref part="C13" gate="C" pin="2"/>
-<wire x1="175.26" y1="116.84" x2="182.88" y2="116.84" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
