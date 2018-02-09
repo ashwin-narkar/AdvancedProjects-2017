@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.0.1">
+<eagle version="8.4.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
+<setting keepoldvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -4007,7 +4008,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="R9" library="SparkFun-Resistors" deviceset="10.5KOHM1/10W1%(0603)" device="" value="510"/>
 <part name="R10" library="SparkFun-Resistors" deviceset="10.5KOHM1/10W1%(0603)" device="" value="10k"/>
 <part name="R11" library="SparkFun-Resistors" deviceset="10.5KOHM1/10W1%(0603)" device="" value="10k"/>
-<part name="U$1" library="JST_CONNECTOR_FEMALE. through hole" deviceset="JST_CONNECTOR_FEMALE" device=""/>
+<part name="JST_MOTOR_1" library="JST_CONNECTOR_FEMALE. through hole" deviceset="JST_CONNECTOR_FEMALE" device="" value="JST_MOTOR_1"/>
 <part name="U$3" library="JST_CONNECTOR_FEMALE. through hole" deviceset="JST_CONNECTOR_FEMALE" device=""/>
 <part name="U$4" library="JST_CONNECTOR_FEMALE. through hole" deviceset="JST_CONNECTOR_FEMALE" device=""/>
 <part name="U$5" library="JST_CONNECTOR_FEMALE. through hole" deviceset="JST_CONNECTOR_FEMALE" device=""/>
@@ -4063,7 +4064,7 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="R9" gate="G$1" x="55.88" y="-15.24"/>
 <instance part="R10" gate="G$1" x="271.78" y="88.9" rot="R90"/>
 <instance part="R11" gate="G$1" x="271.78" y="73.66" rot="R90"/>
-<instance part="U$1" gate="G$1" x="-17.78" y="96.52" rot="R270"/>
+<instance part="JST_MOTOR_1" gate="G$1" x="-17.78" y="96.52" rot="R270"/>
 <instance part="U$3" gate="G$1" x="-63.5" y="96.52" rot="R270"/>
 <instance part="U$4" gate="G$1" x="-66.04" y="40.64" rot="R270"/>
 <instance part="U$5" gate="G$1" x="-17.78" y="40.64" rot="R270"/>
@@ -4258,7 +4259,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="-45.72" y1="106.68" x2="-33.02" y2="106.68" width="0.1524" layer="91"/>
 <junction x="-33.02" y="106.68"/>
 <label x="-33.02" y="111.76" size="1.778" layer="95" xref="yes"/>
-<pinref part="U$1" gate="G$1" pin="+"/>
+<pinref part="JST_MOTOR_1" gate="G$1" pin="+"/>
 <wire x1="-33.02" y1="99.06" x2="-27.94" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -4449,7 +4450,7 @@ Source: AVX .. aphvc.pdf</description>
 <wire x1="-45.72" y1="91.44" x2="-45.72" y2="88.9" width="0.1524" layer="91"/>
 <wire x1="-27.94" y1="91.44" x2="-45.72" y2="91.44" width="0.1524" layer="91"/>
 <junction x="-45.72" y="91.44"/>
-<pinref part="U$1" gate="G$1" pin="-"/>
+<pinref part="JST_MOTOR_1" gate="G$1" pin="-"/>
 <wire x1="-27.94" y1="91.44" x2="-27.94" y2="93.98" width="0.1524" layer="91"/>
 </segment>
 </net>
